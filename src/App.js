@@ -7,7 +7,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <h1>Welcome to My App!</h1>
+        <h1>Welcome to My Meet App!</h1>
         <p>
          <code>src/App.js</code> Welcome to My Meet App!
         </p>
