@@ -13,9 +13,9 @@ provider:
     CLIENT_SECRET: ${file(config.json):CLIENT_SECRET}
     CALENDAR_ID: ${file(config.json):CALENDAR_ID}
 functions:
-  hello:
+  getAuthURL:
     handler: handler.getAuthURL
     events:
       - http:
-          path: <https://amysikora.github.io/meet/>
-          method: <get, post, put, or delete>
+          path: api/get-auth-url
+          method: get
