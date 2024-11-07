@@ -72,21 +72,21 @@
       const getToken =
         "https://mt7azmlov5.execute-api.us-west-2.amazonaws.com/dev/api/token";
 
-      getAccessToken.onclick = function () {
-        let code = codeValue.value;
+        getAccessToken.onclick = function () {
+            let code = codeValue.value;
 
-        // if the authorization code is not URL-encoded, then URL-encode it.
-        if (decodeURIComponent(code) === code) {
-          code = encodeURIComponent(codeValue.value);
-        }
-        const getTokenRequest = getToken +  "/" + code;
-        fetch(getTokenRequest)
-          .then(function (response) {
-            return response.json();
-          })
-          .then(function (json) {
-            accessTokenElement.innerText = JSON.stringify(json);
-          });
+            // if the authorization code is not URL-encoded, then URL-encode it.
+            if (decodeURIComponent(code) === code) {
+                code = encodeURIComponent(codeValue.value);
+            }
+            const getTokenRequest = getToken + "/" + code;
+            fetch(getTokenRequest)
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (json) {
+                    accessTokenElement.innerText = JSON.stringify(json);
+                });
       };
       // --------------------- END OF STEP 2
 
