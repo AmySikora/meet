@@ -79,6 +79,7 @@
         if (decodeURIComponent(code) === code) {
           code = encodeURIComponent(codeValue.value);
         }
+       
         const getTokenRequest = getToken +  "/" + code;
         fetch(getTokenRequest)
           .then(function (response) {
