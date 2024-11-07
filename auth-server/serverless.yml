@@ -3,7 +3,7 @@ org: ames77
 # "service" is the name of this project. This will also be added to your AWS resource names.
 service: auth-server
 
-frameworkVersion: "3"
+frameworkVersion: "4"
 
 provider:
   name: aws
