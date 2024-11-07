@@ -3,11 +3,13 @@ org: ames77
 # "service" is the name of this project. This will also be added to your AWS resource names.
 service: auth-server
 
+frameworkVersion: "3"
+
 provider:
   name: aws
   runtime: nodejs20.x
   region: us-west-2
-  timeout: 30
+  timeout: 30 
   environment:
     CLIENT_ID: ${file(config.json):CLIENT_ID}
     CLIENT_SECRET: ${file(config.json):CLIENT_SECRET}
@@ -19,9 +21,11 @@ functions:
       - http:
           path: api/get-auth-url
           method: get
+
   getAccessToken:
     handler: handler.getAccessToken
     events:
       - http:
           path: api/token/{code}
           method: get
+          cors: true
