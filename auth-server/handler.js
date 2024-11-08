@@ -93,7 +93,6 @@ module.exports.getCalendarEvents = async (event) => {
     );
   })
     .then((results) => {
-      // Respond with OAuth token
       return {
         statusCode: 200,
         headers: {
@@ -103,3 +102,10 @@ module.exports.getCalendarEvents = async (event) => {
         body: JSON.stringify({ events: results.data.items }),
       };
     })
+    .catch((error) => {
+      return {
+        statusCode: 500,
+        body: JSON.stringify(error),
+      };
+    });
+};
