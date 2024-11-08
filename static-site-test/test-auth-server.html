@@ -107,9 +107,12 @@
                 .then(function (response) {
                     return response.json();
                 })
-                .then(function (json) {
-                    events.innerText = JSON.stringify(sjson, null, 2);
-                });
+         .then(function (json) {
+            events.innerText = JSON.stringify(json, null, 2);
+          })
+          .catch(function (error) {
+            events.innerText = `Error: ${error.message}`;
+        });
         };
         // -- END OF STEP 3
 
