@@ -9,7 +9,9 @@ const CitySearch = () => {
       <input
         type="text"
         className="city"
+                placeholder="Search for a city"
       />
+      {showSuggestions ? <ul className="suggestions"></ul> : null}
     </div>
   )
 }
