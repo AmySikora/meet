@@ -9,12 +9,13 @@ describe('<CitySearch /> component', () => {
   beforeEach(() => {
     CitySearchComponent = render(<CitySearch />);
   });
-  test('renders text input', () => {
+
+ test('renders text input', () => {
     const cityTextBox = CitySearchComponent.queryByRole('textbox');
     expect(cityTextBox).toBeInTheDocument();
     expect(cityTextBox).toHaveClass('city');
   });
-
+  
   test('suggestions list is hidden by default', () => {
     const suggestionList = CitySearchComponent.queryByRole('list');
     expect(suggestionList).not.toBeInTheDocument();
