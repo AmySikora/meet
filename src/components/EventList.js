@@ -1,5 +1,5 @@
 // src/components/EventList.js
-import { getEvents } from '../api'
+
 import Event from "./Event";
 
 const EventList = ({ events }) => {

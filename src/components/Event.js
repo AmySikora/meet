@@ -1,3 +1,5 @@
+// src/components/Event.js
+
 const Event = () => {
     return (
       <li></li>
