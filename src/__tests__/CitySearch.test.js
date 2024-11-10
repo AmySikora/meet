@@ -4,13 +4,17 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CitySearch from '../components/CitySearch';
 
-describe('<CitySearch /> component', () => {
-  test('renders text input', () => {
-    const CitySearchComponent = render(<CitySearch />);
-    const cityTextBox = CitySearchComponent.queryByRole('textbox');
-    expect(cityTextBox).toBeInTheDocument();
-    expect(cityTextBox).toHaveClass('city');
-  });
+ddescribe('<CitySearch /> component', () => {
+    let CitySearchComponent;
+    beforeEach(() => {
+      CitySearchComponent = render(<CitySearch />);
+    });
+    test('renders text input', () => {
+        const cityTextBox = CitySearchComponent.queryByRole('textbox');
+        expect(cityTextBox).toBeInTheDocument();
+        expect(cityTextBox).toHaveClass('city');
+      });
+    
 
   test('suggestions list is hidden by default', () => {
     const CitySearchComponent = render(<CitySearch />);
