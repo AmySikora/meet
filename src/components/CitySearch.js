@@ -9,8 +9,7 @@ const CitySearch = () => {
       <input
         type="text"
         className="city"
-            placehollder="Search for a city"
-
+                placeholder="Search for a city"
         onFocus={() => setShowSuggestions(true)}
       />
       {showSuggestions ? <ul className="suggestions"></ul> : null}
