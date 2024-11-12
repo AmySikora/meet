@@ -1,34 +1,34 @@
 // src/__tests__/NumberOfEvents.test.js
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import NumberOfEvents from "../components/NumberOfEvents";
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import NumberOfEvents from '../components/NumberOfEvents';
 
 describe('<NumberOfEvents /> Component', () => {
     beforeEach(() => {
         render(
             <NumberOfEvents
-                currentNOE={32}
+                currentNOE={32} 
                 setCurrentNOE={() => {}}
                 setErrorAlert={() => {}}
             />
         );
     });
 
-    test('renders an input box', () => {
-        const inputBox = screen.getByRole('textbox');
-        expect(inputBox).toBeInTheDocument();
+    test('render element with role of spinbutton', () => {
+        const input = screen.getByRole('spinbutton'); // Updated to spinbutton for number input
+        expect(input).toBeInTheDocument();
     });
 
-    test('input box has a default value of 32', () => {
-        const inputBox = screen.getByRole('textbox');
-        expect(inputBox).toHaveValue(32);
+    test('default number of events is 32', () => {
+        const input = screen.getByRole('spinbutton');
+        expect(input).toHaveValue(32);
     });
 
-    test('updates input box value based on user input', async () => {
-        const inputBox = screen.getByTestId('numberOfEventsInput');
+    test('change number of events when a user types in the input', async () => {
+        const input = screen.getByTestId('numberOfEventsInput');
         const user = userEvent.setup();
-        await user.clear(inputBox);
-        await user.type(inputBox, '10');
-        expect(inputBox).toHaveValue(10);
+        await user.clear(input);
+        await user.type(input, '10');
+        expect(input).toHaveValue(10);
     });
 });
