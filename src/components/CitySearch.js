@@ -11,14 +11,16 @@ const CitySearch = ({ allLocations, setCurrentCity }) => {
 
   const handleInputChanged = (event) => {
     const value = event.target.value;
-    const filteredLocations = allLocations
-      ? allLocations.filter(location =>
-          location.toUpperCase().includes(value.toUpperCase())
-        )
-      : [];
-      
-    setSuggestions([...filteredLocations, "See all cities"]);
     setQuery(value);
+
+    const filteredSuggestions =
+      value === ''
+        ? ['See all cities', ...allLocations]
+        : ['See all cities', ...allLocations.filter((location) =>
+            location.toLowerCase().includes(value.toLowerCase())
+          )];
+
+    setSuggestions(filteredSuggestions);
   };
 
   const handleItemClicked = (event) => {
