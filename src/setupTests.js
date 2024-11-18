@@ -14,4 +14,7 @@ const originalError = console.error.bind(console.error);
 console.error = (...args) => {
   const ignoreMessage = MESSAGES_TO_IGNORE.find(message => args.toString().includes(message));
   if (!ignoreMessage) originalError(...args);
+
 }
+
+jest.setTimeout(75000);

@@ -6,15 +6,19 @@ const Event = ({ event }) => {
   const [detailsVisible, setDetailsVisible] = useState(false);
 
   return (
-    <li>
-      <h2>{event.summary}</h2>          {/* Displays event title */}
-      <p>{event.created}</p>            {/* Displays event creation date */}
-      <p>{event.location}</p>           {/* Displays event location */}
-      <button onClick={() => setDetailsVisible(!detailsVisible)}>
-        {detailsVisible ? "Hide Details" : "Show Details"}
-      </button>
-      {detailsVisible && <p data-testid="event-details">{event.description}</p>} {/* Displays event details */}
-    </li>
+   
+  <li className="event">
+    <h2>{event.summary}</h2>          
+    <p>{event.created}</p>          
+    <p>{event.location}</p>       
+    <button
+      className="details-btn"
+      onClick={() => setDetailsVisible(!detailsVisible)}
+    >
+      {detailsVisible ? "Hide Details" : "Show Details"}
+    </button>
+    {detailsVisible && <p data-testid="event-details">{event.description}</p>} 
+  </li>
   );
 };
 
