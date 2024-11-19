@@ -10,6 +10,7 @@ defineFeature(feature, (test) => {
   let sampleEvent = mockData[0];
   let user;
 
+  
   beforeEach(() => {
     user = userEvent.setup();
   });

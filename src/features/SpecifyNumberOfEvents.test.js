@@ -19,15 +19,15 @@ defineFeature(feature, (test) => {
       AppComponent = render(<App />);
     });
 
-    when('the user specifies the number of events to display (e.g., 5, 10, or 20)', async () => {
-      const numberInput = screen.getByTestId('numberOfEventsInput'); // Match the rendered DOM
-      await user.clear(numberInput); // Clear any existing value
-      await user.type(numberInput, '5'); // Enter '5' as the desired number
+    when(/^the user specifies the number of events to display \(e.g., (\d+), (\d+), or (\d+)\)$/, async (arg0, arg1, arg2) => {
+      const numberInput = screen.getByTestId('numberOfEventsInput'); 
+      await user.clear(numberInput); 
+      await user.type(numberInput, '5'); 
     });
 
     then('only that specified number of events should be shown on the screen', async () => {
-      const EventListItems = await screen.findAllByRole('listitem'); // Ensure your events are rendered as `listitem` roles
-      expect(EventListItems).toHaveLength(5); // Verify the length matches the specified number
+      const EventListItems = await screen.findAllByRole('listitem'); 
+      expect(EventListItems).toHaveLength(5); 
     });
   });
 });
