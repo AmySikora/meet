@@ -10,8 +10,8 @@
       "region": "us-west-2",
       "timeout": 30,
       "environment": {
-        "CLIENT_ID": "890645155532-dpbj1thgih3fa8203vb71jfrob9nltls.apps.googleusercontent.com",
-        "CLIENT_SECRET": "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",
+        "CLIENT_ID": "CLIENT_ID.apps.googleusercontent.com",
+        "CLIENT_SECRET": "CLIENT_SECRET",
         "CALENDAR_ID": "fullstackwebdev@careerfoundry.com"
       },
       "stage": "dev",
