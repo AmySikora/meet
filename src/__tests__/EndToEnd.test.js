@@ -15,9 +15,10 @@ describe('show/hide event details', () => {
     await page.waitForSelector('.event');
   });
 
-    afterAll(() => {
-        browser.close();
-    });
+  afterAll(async () => {
+    await browser.close();
+  });
+  
 
     test('An event element is collapsed by default', async () => {
         const eventDetails = await page.$('.event .details');

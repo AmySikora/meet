@@ -93,4 +93,3 @@ export const getEvents = async () => {
         }
     return accessToken;
   }
-

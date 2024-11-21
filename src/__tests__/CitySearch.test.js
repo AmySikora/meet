@@ -12,7 +12,6 @@ describe('<CitySearch /> component', () => {
     CitySearchComponent = render(<CitySearch allLocations={[]} />);
   });
 
-
   test('renders text input', () => {
     const cityTextBox = CitySearchComponent.queryByRole('textbox');
     expect(cityTextBox).toBeInTheDocument();
