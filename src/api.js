@@ -45,22 +45,32 @@ const removeQuery = () => {
  */
 
 export const getEvents = async () => {
+  try {
     if (window.location.href.startsWith("http://localhost")) {
       return mockData;
     }
-  
+
     const token = await getAccessToken();
-  
     if (token) {
       removeQuery();
-      const url =  "https://mt7azmlov5.execute-api.us-west-2.amazonaws.com/dev/api/get-events" + "/" + token;
+      const url = `https://mt7azmlov5.execute-api.us-west-2.amazonaws.com/dev/api/get-events/${token}`;
+      console.log("Fetching events from URL:", url);
+
       const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
       const result = await response.json();
-      if (result) {
-        return result.events;
-      } else return null; 
+      console.log("Fetched events:", result.events);
+      return result.events || null;
     }
-  };
+  } catch (error) {
+    console.error("Error in getEvents:", error);
+    throw error; 
+  }
+};
 
   const getToken = async (code) => {
     const encodeCode = encodeURIComponent(code);
@@ -93,3 +103,4 @@ export const getEvents = async () => {
         }
     return accessToken;
   }
+

@@ -5,6 +5,11 @@ import CitySearch from './components/CitySearch';
 import NumberOfEvents from './components/NumberOfEvents';
 import { extractLocations, getEvents } from './api';
 
+const ErrorAlert = ({ message }) => {
+  return message ? <div className="error-alert">{message}</div> : null;
+};
+
+
 const App = () => {
   const [events, setEvents] = useState([]);
   const [currentNOE, setCurrentNOE] = useState(32);
@@ -12,15 +17,19 @@ const App = () => {
   const [currentCity, setCurrentCity] = useState("See all cities");
   const [errorAlert, setErrorAlert] = useState("");
 
-
   const fetchData = useCallback(async () => {
-    const allEvents = await getEvents();
-    const filteredEvents = currentCity === "See all cities" || !currentCity
-      ? allEvents
-      : allEvents.filter(event => event.location === currentCity);  
-    setEvents(filteredEvents.slice(0, currentNOE));
-    setAllLocations(extractLocations(allEvents));
-
+    try {
+      const allEvents = await getEvents();
+      const filteredEvents =
+        currentCity === "See all cities" || !currentCity
+          ? allEvents
+          : allEvents.filter((event) => event.location === currentCity);
+      setEvents(filteredEvents.slice(0, currentNOE));
+      setAllLocations(extractLocations(allEvents));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setErrorAlert("Failed to fetch events. Please try again later.");
+    }
   }, [currentCity, currentNOE]);
 
   useEffect(() => {
@@ -29,19 +38,16 @@ const App = () => {
 
   return (
     <div className="App">
-      <CitySearch 
-        allLocations={allLocations} 
-        setCurrentCity={setCurrentCity} 
-      />
-      <NumberOfEvents 
+      <CitySearch allLocations={allLocations} setCurrentCity={setCurrentCity} />
+      <NumberOfEvents
         setErrorAlert={setErrorAlert}
         currentNOE={currentNOE}
         setCurrentNOE={setCurrentNOE}
       />
+      <ErrorAlert message={errorAlert} />
       <EventList events={events} />
     </div>
   );
-  
-}
+};
 
 export default App;
