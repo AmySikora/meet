@@ -19,7 +19,6 @@ describe('show/hide event details', () => {
     await browser.close();
   });
   
-
     test('An event element is collapsed by default', async () => {
         const eventDetails = await page.$('.event .details');
         expect(eventDetails).toBeNull();
