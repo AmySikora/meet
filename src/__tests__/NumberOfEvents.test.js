@@ -1,53 +1,65 @@
-import { render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import NumberOfEvents from '../components/NumberOfEvents';
+// src/__tests__/NumberOfEvents.test.js
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import NumberOfEvents from "../components/NumberOfEvents";
 
-describe('<NumberOfEvents /> component', () => {
-  let mockSetErrorAlert, mockSetCurrentNOE, NumberOfEventsComponent;
+describe("<NumberOfEvents /> Component", () => {
+  let setCurrentNOE;
+  let setErrorAlert;
 
   beforeEach(() => {
-    mockSetErrorAlert = jest.fn();
-    mockSetCurrentNOE = jest.fn();
-    NumberOfEventsComponent = render(
+    setCurrentNOE = jest.fn();
+    setErrorAlert = jest.fn();
+
+    render(
       <NumberOfEvents
         currentNOE={32}
-        setCurrentNOE={mockSetCurrentNOE}
-        setErrorAlert={mockSetErrorAlert}
+        setCurrentNOE={setCurrentNOE}
+        setErrorAlert={setErrorAlert}
       />
     );
   });
 
-  test('renders number of events text input', () => {
-    const numberTextBox = NumberOfEventsComponent.getByTestId('numberOfEventsInput');
-    expect(numberTextBox).toBeInTheDocument();
+  test("renders input textbox for number of events", () => {
+    const input = screen.getByRole("spinbutton");
+    expect(input).toBeInTheDocument();
   });
 
-  test('default number is 32', () => {
-    const numberTextBox = NumberOfEventsComponent.getByTestId('numberOfEventsInput');
-    expect(numberTextBox).toHaveValue(32);
+  test("default value of the textbox is 32", () => {
+    const input = screen.getByRole("spinbutton");
+    expect(input).toHaveValue(32);
   });
 
-  test('number of events text box value changes when the user types in it', async () => {
+  test("textbox value updates when user types", async () => {
+    const input = screen.getByRole("spinbutton");
     const user = userEvent.setup();
-    const numberTextBox = NumberOfEventsComponent.getByTestId('numberOfEventsInput');
 
-    await user.clear(numberTextBox);
-    await user.type(numberTextBox, '10');
+    await user.clear(input);
+    await user.type(input, "10");
 
-    expect(mockSetCurrentNOE).toHaveBeenCalledWith(10);
-    expect(mockSetErrorAlert).toHaveBeenCalledWith(""); // No error for valid input
+    expect(input).toHaveValue(10);
+    expect(setErrorAlert).toHaveBeenCalledWith(""); 
+    expect(setCurrentNOE).toHaveBeenCalledWith(10);
   });
 
-  test('shows an error alert when input is invalid', async () => {
+  test("shows error for non-numeric input", async () => {
+    const input = screen.getByRole("spinbutton");
     const user = userEvent.setup();
-    const numberTextBox = NumberOfEventsComponent.getByTestId('numberOfEventsInput');
 
-    await user.clear(numberTextBox);
-    await user.type(numberTextBox, "abc");
-    expect(mockSetErrorAlert).toHaveBeenCalledWith("Enter a valid number");
+    await user.clear(input);
+    await user.type(input, "abc");
 
-    await user.clear(numberTextBox);
-    await user.type(numberTextBox, "50");
-    expect(mockSetErrorAlert).toHaveBeenCalledWith("Only a maximum of 32 is allowed");
+    expect(setErrorAlert).toHaveBeenCalledWith("Enter a valid number");
+  });
+
+  test("shows error for numbers greater than 32", async () => {
+    const input = screen.getByRole("spinbutton");
+    const user = userEvent.setup();
+
+    await user.clear(input);
+    await user.type(input, "50");
+
+    expect(setErrorAlert).toHaveBeenCalledWith("Only a maximum of 32 is allowed");
   });
 });

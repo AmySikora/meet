@@ -1,33 +1,44 @@
 import React, { useState, useEffect } from "react";
 
-const CitySearch = ({ allLocations, setCurrentCity }) => {
+const CitySearch = ({ allLocations, setCurrentCity, setInfoAlert }) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
     setSuggestions(["See all cities", ...allLocations]);
-  }, [`${allLocations}`]);
+  }, [allLocations]); 
 
   const handleInputChanged = (event) => {
     const value = event.target.value;
     setQuery(value);
 
-    const filteredSuggestions =
-      value === ''
-        ? ['See all cities', ...allLocations]
-        : ['See all cities', ...allLocations.filter((location) =>
+    const filteredLocations =
+      allLocations && allLocations.length > 0
+        ? allLocations.filter((location) =>
             location.toLowerCase().includes(value.toLowerCase())
-          )];
+          )
+        : [];
+
+    const filteredSuggestions = value === ""
+      ? ["See all cities", ...allLocations]
+      : ["See all cities", ...filteredLocations];
 
     setSuggestions(filteredSuggestions);
+
+    if (filteredLocations.length === 0) {
+      setInfoAlert("We cannot find the city you are looking for. Please try another city.");
+    } else {
+      setInfoAlert("");
+    }
   };
 
   const handleItemClicked = (event) => {
     const value = event.target.textContent;
     setQuery(value);
     setShowSuggestions(false);
-    setCurrentCity(value === "See all cities" ? "" : value);
+    setCurrentCity(value);
+    setInfoAlert("")
   };
 
   return (

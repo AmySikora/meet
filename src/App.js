@@ -1,14 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import './App.css';
-import EventList from './components/EventList';
-import CitySearch from './components/CitySearch';
-import NumberOfEvents from './components/NumberOfEvents';
-import { extractLocations, getEvents } from './api';
-
-const ErrorAlert = ({ message }) => {
-  return message ? <div className="error-alert">{message}</div> : null;
-};
-
+import React, { useEffect, useState, useCallback } from "react";
+import "./App.css";
+import EventList from "./components/EventList";
+import CitySearch from "./components/CitySearch";
+import NumberOfEvents from "./components/NumberOfEvents";
+import { extractLocations, getEvents } from "./api";
+import { InfoAlert, ErrorAlert } from "./components/Alert";
 
 const App = () => {
   const [events, setEvents] = useState([]);
@@ -16,6 +12,7 @@ const App = () => {
   const [allLocations, setAllLocations] = useState([]);
   const [currentCity, setCurrentCity] = useState("See all cities");
   const [errorAlert, setErrorAlert] = useState("");
+  const [infoAlert, setInfoAlert] = useState("");
 
   const fetchData = useCallback(async () => {
     try {
@@ -38,13 +35,20 @@ const App = () => {
 
   return (
     <div className="App">
-      <CitySearch allLocations={allLocations} setCurrentCity={setCurrentCity} />
+      <div className="alerts-container">
+        {infoAlert.length ? <InfoAlert text={infoAlert} /> : null}
+        {errorAlert.length ? <ErrorAlert text={errorAlert} /> : null}
+      </div>
+      <CitySearch
+        allLocations={allLocations}
+        setCurrentCity={setCurrentCity}
+        setInfoAlert={setInfoAlert}
+      />
       <NumberOfEvents
         setErrorAlert={setErrorAlert}
         currentNOE={currentNOE}
         setCurrentNOE={setCurrentNOE}
       />
-      <ErrorAlert message={errorAlert} />
       <EventList events={events} />
     </div>
   );
