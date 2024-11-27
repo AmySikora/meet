@@ -4,7 +4,7 @@ import EventList from "./components/EventList";
 import CitySearch from "./components/CitySearch";
 import NumberOfEvents from "./components/NumberOfEvents";
 import { extractLocations, getEvents } from "./api";
-import { InfoAlert, ErrorAlert } from "./components/Alert";
+import { InfoAlert, ErrorAlert, WarningAlert } from "./components/Alert";
 
 const App = () => {
   const [events, setEvents] = useState([]);
@@ -13,25 +13,25 @@ const App = () => {
   const [currentCity, setCurrentCity] = useState("See all cities");
   const [errorAlert, setErrorAlert] = useState("");
   const [infoAlert, setInfoAlert] = useState("");
+  const [warningAlert, setWarningAlert] = useState("");
 
-  const fetchData = useCallback(async () => {
-    try {
-      const allEvents = await getEvents();
-      const filteredEvents =
-        currentCity === "See all cities" || !currentCity
-          ? allEvents
-          : allEvents.filter((event) => event.location === currentCity);
-      setEvents(filteredEvents.slice(0, currentNOE));
-      setAllLocations(extractLocations(allEvents));
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      setErrorAlert("Failed to fetch events. Please try again later.");
-    }
-  }, [currentCity, currentNOE]);
+  const fetchData = async () => {
+    const allEvents = await getEvents();
+    const filteredEvents = currentCity === "See all cities" ?
+      allEvents :
+      allEvents.filter(event => event.location === currentCity);
+    setEvents(filteredEvents.slice(0, currentNOE)); 
+    setAllLocations(extractLocations(allEvents));
+  }
 
   useEffect(() => {
+    if (navigator.onLine) {
+      setWarningAlert(""); 
+    } else {
+      setWarningAlert("You have gone offline. Some features may not display."); 
+    }
     fetchData();
-  }, [fetchData]);
+  }, [currentCity, currentNOE]); 
 
   return (
     <div className="App">
@@ -43,6 +43,7 @@ const App = () => {
       <div className="alerts-container">
         {infoAlert.length ? <InfoAlert text={infoAlert} /> : null}
         {errorAlert.length ? <ErrorAlert text={errorAlert} /> : null}
+        {warningAlert.length ? <WarningAlert text={warningAlert} /> : null}
       </div>
       <CitySearch
         allLocations={allLocations}
