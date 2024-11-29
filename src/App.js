@@ -1,56 +1,52 @@
-import React, { useEffect, useState } from "react";
-import "./App.css";
-import EventList from "./components/EventList";
-import CitySearch from "./components/CitySearch";
-import NumberOfEvents from "./components/NumberOfEvents";
-import { extractLocations, getEvents } from "./api";
-import { InfoAlert, ErrorAlert, WarningAlert } from "./components/Alert";
-import CityEventsChart from './components/CityEventsChart';
+// src/components/CityEventsChart.js
 
-const App = () => {
-  const [events, setEvents] = useState([]);
-  const [currentNOE, setCurrentNOE] = useState(32);
-  const [allLocations, setAllLocations] = useState([]);
-  const [currentCity, setCurrentCity] = useState("See all cities");
-  const [errorAlert, setErrorAlert] = useState("");
-  const [infoAlert, setInfoAlert] = useState("");
-  const [warningAlert, setWarningAlert] = useState("");
+import { useState, useEffect } from 'react';
+import {
+  ScatterChart,
+  Scatter,
+  XAxis, YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from 'recharts';
 
-  const fetchData = async () => {
-    const allEvents = await getEvents();
-    const filteredEvents = currentCity === "See all cities" ?
-      allEvents :
-      allEvents.filter(event => event.location === currentCity);
-    setEvents(filteredEvents.slice(0, currentNOE)); 
-    setAllLocations(extractLocations(allEvents));
-  }
+const CityEventsChart = ({ allLocations, events }) => {
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    if (navigator.onLine) {
-      setWarningAlert(""); 
-    } else {
-      setWarningAlert("You have gone offline. Some features may not display."); 
-    }
-    fetchData();
-  }, [currentCity, currentNOE]); 
+    setData(getData());
+  }, [`${data}`]);
+
+  const getData = () => {
+    const data = allLocations.map((location) => {
+      const count = events.filter((event) => event.location === location).length
+      const city = location.split((/, | - /))[0]
+      return { city, count };
+    })
+    return data;
+  };
 
   return (
-    <div className="App">
-      <h1>Meet App</h1>
-      <div className="alerts-container">
-        {infoAlert.length ? <InfoAlert text={infoAlert} /> : null}
-        {warningAlert.length ? <WarningAlert text={warningAlert} /> : null}
-        {errorAlert.length ? <ErrorAlert text={errorAlert} /> : null}
-      </div>
-      <CitySearch
-        allLocations={allLocations}
-        setCurrentCity={setCurrentCity}
-        setInfoAlert={setInfoAlert} />
-      <NumberOfEvents setCurrentNOE={setCurrentNOE} setErrorAlert={setErrorAlert} />
-      <CityEventsChart allLocations={allLocations} events={events} />
-      <EventList events={events} />
-    </div>
- );
+    <ResponsiveContainer width="99%" height={400}>
+      <ScatterChart
+        margin={{
+          top: 20,
+          right: 20,
+          bottom: 60,
+          left: -30,
+        }}
+      >
+        <CartesianGrid />
+        <XAxis
+          type="category" dataKey="city" name="City"
+          angle={60} interval={0} tick={{ dx: 20, dy: 40, fontSize: 14 }}
+        />
+        <YAxis type="number" dataKey="count" name="Number of events" />
+        <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+        <Scatter name="A school" data={data} fill="#8884d8" />
+      </ScatterChart>
+    </ResponsiveContainer>
+  );
 }
 
-export default App;
+export default CityEventsChart;
