@@ -5,6 +5,7 @@ import CitySearch from "./components/CitySearch";
 import NumberOfEvents from "./components/NumberOfEvents";
 import { extractLocations, getEvents } from "./api";
 import { InfoAlert, ErrorAlert, WarningAlert } from "./components/Alert";
+import CityEventsChart from './components/CityEventsChart';
 
 const App = () => {
   const [events, setEvents] = useState([]);
@@ -35,30 +36,21 @@ const App = () => {
 
   return (
     <div className="App">
-      <header className="header">
-        <div className="title">
-          <h1>Meet App</h1>
-            <p>Search for a city</p>
-        </div>
+      <h1>Meet App</h1>
       <div className="alerts-container">
         {infoAlert.length ? <InfoAlert text={infoAlert} /> : null}
-        {errorAlert.length ? <ErrorAlert text={errorAlert} /> : null}
         {warningAlert.length ? <WarningAlert text={warningAlert} /> : null}
+        {errorAlert.length ? <ErrorAlert text={errorAlert} /> : null}
       </div>
       <CitySearch
         allLocations={allLocations}
         setCurrentCity={setCurrentCity}
-        setInfoAlert={setInfoAlert}
-      />
-      <NumberOfEvents
-        setErrorAlert={setErrorAlert}
-        currentNOE={currentNOE}
-        setCurrentNOE={setCurrentNOE}
-      />
-       </header>
+        setInfoAlert={setInfoAlert} />
+      <NumberOfEvents setCurrentNOE={setCurrentNOE} setErrorAlert={setErrorAlert} />
+      <CityEventsChart allLocations={allLocations} events={events} />
       <EventList events={events} />
     </div>
-  );
-}; 
+ );
+}
 
 export default App;
