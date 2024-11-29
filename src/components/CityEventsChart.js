@@ -1,22 +1,21 @@
 // src/components/CityEventsChart.js
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 import {
   ScatterChart,
   Scatter,
-  XAxis,
-  YAxis,
+  XAxis, YAxis,
   CartesianGrid,
   Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+  ResponsiveContainer
+} from 'recharts';
 
 const CityEventsChart = ({ allLocations, events }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     setData(getData());
-  }, [`${events}`]);
+  }, [`${data}`]);
 
   const getData = () => {
     const data = allLocations.map((location) => {
@@ -33,22 +32,21 @@ const CityEventsChart = ({ allLocations, events }) => {
         margin={{
           top: 20,
           right: 20,
-          bottom: 60,
-          left: -30,
+          bottom: 20,
+          left: 10,
         }}
       >
-        
         <CartesianGrid />
         <XAxis
           type="category" dataKey="city" name="City"
           angle={60} interval={0} tick={{ dx: 20, dy: 40, fontSize: 14 }}
         />
-        <YAxis type="number" dataKey="countnumber" name="Number of events" allowDecimals={false} />
+        <YAxis type="number" dataKey="count" name="Number of events" allowDecimals={false} />
         <Tooltip cursor={{ strokeDasharray: "3 3" }} />
         <Scatter name="Locations" data={data} fill="#8884d8" />
       </ScatterChart>
     </ResponsiveContainer>
   );
-};
+}
 
 export default CityEventsChart;
