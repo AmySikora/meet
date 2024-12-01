@@ -9,7 +9,9 @@ const EventGenresChart = ({ events }) => {
   useEffect(() => {
     const getData = () => {
       return genres.map((genre) => {
-        const filteredEvents = events.filter((event) => event.summary.includes(genre));
+        const filteredEvents = events.filter((event) =>
+          event.summary.includes(genre)
+        );
         return {
           name: genre,
           value: filteredEvents.length,
@@ -22,7 +24,15 @@ const EventGenresChart = ({ events }) => {
     }
   }, [events]);
 
-  const renderCustomizedLabel = ({ cx, cy, midAngle, outerRadius, innerRadius, percent, index }) => {
+  const renderCustomizedLabel = ({
+    cx,
+    cy,
+    midAngle,
+    outerRadius,
+    innerRadius,
+    percent,
+    index,
+  }) => {
     const RADIAN = Math.PI / 180;
     const radius = innerRadius + (outerRadius - innerRadius) * 0.7;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -32,7 +42,7 @@ const EventGenresChart = ({ events }) => {
       <text
         x={x}
         y={y}
-        fill="#333333" 
+        fill="#333333"
         fontSize="12px"
         textAnchor={x > cx ? 'start' : 'end'}
         dominantBaseline="central"
@@ -48,12 +58,7 @@ const EventGenresChart = ({ events }) => {
 
   return (
     <ResponsiveContainer width="100%" height={400}>
-      <PieChart
-        margin={{
-          top: 40,
-          bottom: 80,
-        }}
-      >
+      <PieChart>
         <Pie
           data={data}
           dataKey="value"
