@@ -14,6 +14,9 @@ const oAuth2Client = new google.auth.OAuth2(
   redirect_uris[0]
 );
 
+// =====================
+// getAuthURL
+// =====================
 module.exports.getAuthURL = async () => {
   try {
     const authUrl = oAuth2Client.generateAuthUrl({
@@ -24,8 +27,8 @@ module.exports.getAuthURL = async () => {
     return {
       statusCode: 200,
       headers: {
-        'Access-Control-Allow-Origin': '*',  // Allow all origins
-        'Access-Control-Allow-Credentials': true,
+        "Access-Control-Allow-Origin": "*",  // Allow all origins
+        "Access-Control-Allow-Credentials": true,
       },
       body: JSON.stringify({ authUrl }),
     };
@@ -34,26 +37,49 @@ module.exports.getAuthURL = async () => {
     return {
       statusCode: 500,
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true,
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
       },
-      body: JSON.stringify({ message: "Failed to generate auth URL", error: error.message }),
+      body: JSON.stringify({
+        message: "Failed to generate auth URL",
+        error: error.message,
+      }),
     };
   }
 };
 
+// ==========================
+// getAccessToken (defensive)
+// ==========================
 module.exports.getAccessToken = async (event) => {
-  const code = decodeURIComponent(event.pathParameters.code);
-
   try {
+    console.log("Incoming event for getAccessToken:", JSON.stringify(event));
+
+    const rawCode = event?.pathParameters?.code;
+    if (!rawCode) {
+      console.error("Missing 'code' in pathParameters");
+      return {
+        statusCode: 400,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": true,
+        },
+        body: JSON.stringify({
+          message: "Missing authorization code in path parameters",
+        }),
+      };
+    }
+
+    const code = decodeURIComponent(rawCode);
+
     const { tokens } = await oAuth2Client.getToken(code);
     oAuth2Client.setCredentials(tokens);
 
     return {
       statusCode: 200,
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true,
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
       },
       body: JSON.stringify(tokens),
     };
@@ -62,20 +88,42 @@ module.exports.getAccessToken = async (event) => {
     return {
       statusCode: 500,
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true,
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
       },
-      body: JSON.stringify({ message: "Failed to retrieve access token", error: error.message }),
+      body: JSON.stringify({
+        message: "Failed to retrieve access token",
+        error: error.message,
+      }),
     };
   }
-  
 };
 
+// ==================================
+// getCalendarEvents (defensive)
+// ==================================
 module.exports.getCalendarEvents = async (event) => {
-  const access_token = decodeURIComponent(event.pathParameters.access_token);
-  oAuth2Client.setCredentials({ access_token });
-
   try {
+    console.log("Incoming event for getCalendarEvents:", JSON.stringify(event));
+
+    const rawToken = event?.pathParameters?.access_token;
+    if (!rawToken) {
+      console.error("Missing 'access_token' in pathParameters");
+      return {
+        statusCode: 400,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": true,
+        },
+        body: JSON.stringify({
+          message: "Missing access token in path parameters",
+        }),
+      };
+    }
+
+    const access_token = decodeURIComponent(rawToken);
+    oAuth2Client.setCredentials({ access_token });
+
     const response = await new Promise((resolve, reject) => {
       calendar.events.list(
         {
@@ -98,19 +146,23 @@ module.exports.getCalendarEvents = async (event) => {
     return {
       statusCode: 200,
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true,
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
       },
       body: JSON.stringify({ events: response.data.items }),
     };
   } catch (error) {
+    console.error("Error fetching calendar events:", error);
     return {
       statusCode: 500,
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Credentials': true,
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
       },
-      body: JSON.stringify({ message: "Failed to fetch calendar events", error: error.message }),
+      body: JSON.stringify({
+        message: "Failed to fetch calendar events",
+        error: error.message,
+      }),
     };
   }
 };
